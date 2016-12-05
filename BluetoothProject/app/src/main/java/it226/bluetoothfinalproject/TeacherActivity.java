@@ -49,6 +49,11 @@ public class TeacherActivity extends AppCompatActivity {
             bluetoothSetupText.setText("Bluetooth is not available");
             //activity.finish();
         }else {
+            // Make Device discoverable by other devices.
+            Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+            startActivity(discoverableIntent);
+
             // Setup bluetooth
             bluetoothSetupText.setText("Select a Device to pair with:");
 
@@ -87,6 +92,11 @@ public class TeacherActivity extends AppCompatActivity {
             bluetoothSetupText.setText("Bluetooth is not available");
             //activity.finish();
         }else {
+            // Make Device discoverable by other devices.
+            Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+            startActivity(discoverableIntent);
+
             // Setup bluetooth
             bluetoothSetupText.setText("Select a Device to pair with:");
 
@@ -101,10 +111,14 @@ public class TeacherActivity extends AppCompatActivity {
         // get paired devices
         pairedDevices = mBluetoothAdapter.getBondedDevices();
 
-        // put it's one to the adapter
-        for(BluetoothDevice device : pairedDevices)
-            BTArrayAdapter.add(device.getName()+ "\n" + device.getAddress());
-
+        // If there are paired devices
+        if (pairedDevices.size() > 0) {
+            // Loop through paired devices
+            for (BluetoothDevice device : pairedDevices) {
+                // Add the name and address to an array adapter to show in a ListView
+                BTArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+            }
+        }
     }
 
     final BroadcastReceiver bReceiver = new BroadcastReceiver() {
