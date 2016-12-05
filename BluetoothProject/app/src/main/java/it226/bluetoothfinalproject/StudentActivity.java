@@ -2,19 +2,27 @@ package it226.bluetoothfinalproject;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Set;
 
 public class StudentActivity extends AppCompatActivity {
@@ -68,6 +76,31 @@ public class StudentActivity extends AppCompatActivity {
     public void studentChatInterface(View view) {
         setContentView(R.layout.activity_student_chat);
 
+        /*
+        final ChatService thread = new ChatService(socket);
+        //change "socket" to the socket passed when the devices are connected
+        //socket needs to be passed from Niranjans connecting method directly
+        //or with a getter or setting the socket to a global variable.
+        final EditText entry = (EditText) findViewById(R.id.entry);
+        Button sendButton = (Button) findViewById(R.id.send);
+        Button closeButton = (Button) findViewById(R.id.close);
+
+        //Send Button
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                thread.start();
+//                insert a toast to make sure that the get text works correctly.
+                thread.sendMessage(entry.getText().toString());
+            }
+        });
+
+        //Close button
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+            }
+        });
+        */
     }
 
     /** Called when the user returns to the Bluetooth Selection Menu **/
@@ -144,6 +177,78 @@ public class StudentActivity extends AppCompatActivity {
         mBluetoothAdapter.startDiscovery();
         registerReceiver(bReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
     }
+
+    private class ChatService extends Thread {
+        private static final int MESSAGE_READ = 1;
+        private final BluetoothSocket mmSocket;
+        private final InputStream mmInStream;
+        private final OutputStream mmOutStream;
+        private final Handler mHandler = new Handler();
+
+        public ChatService(BluetoothSocket socket){
+            mmSocket = socket;
+            InputStream tmpIn = null;
+            OutputStream tmpOut = null;
+
+            try{
+                tmpIn = socket.getInputStream();
+                tmpOut = socket.getOutputStream();
+            }
+            catch (IOException e){}
+
+            mmInStream = tmpIn;
+            mmOutStream = tmpOut;
+        }
+        //listens to any incoming data and displays them in the active UI
+        public void run() {
+            byte[] buffer = new byte[1024];
+            int bytes;
+
+            while(true){
+                try{
+                    bytes = mmInStream.read(buffer);
+                    mHandler.obtainMessage(MESSAGE_READ, bytes, -1, buffer).sendToTarget();
+                }
+                catch (IOException e){
+                    break;
+                }
+            }
+        }
+
+        public void write(byte[] bytes) {
+            try {
+                mmOutStream.write(bytes);
+            } catch (IOException e) { }
+        }
+
+        public void cancel() {
+            try {
+                mmSocket.close();
+            } catch (IOException e) { }
+        }
+
+        private void sendMessage(String message) {
+            if (message.length() > 0) {
+                // Get the message bytes and tell the BluetoothChatService to write
+                byte[] send = message.getBytes();
+                write(send);
+
+                // Reset out string buffer to zero and clear the edit text field
+                EditText entry = (EditText) findViewById(R.id.entry);
+                entry.setText("");
+            }
+
+        }
+    }
+    private final Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if(msg.what == 1){
+
+            }
+        }
+    };
+
 
     @Override
     protected void onDestroy() {
