@@ -23,7 +23,9 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Set;
+import java.util.UUID;
 
 public class StudentActivity extends AppCompatActivity {
 
@@ -34,6 +36,9 @@ public class StudentActivity extends AppCompatActivity {
     private ListView myListView;
     private Set<BluetoothDevice> pairedDevices;
     private ArrayAdapter<String> BTArrayAdapter;
+    private BluetoothSocket mBTsocket;
+    private static final UUID MY_UUID_SECURE = UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66"); // secure UUID
+    private static final UUID MY_UUID_INSECURE = UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66"); // insecure UUID
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,37 +77,6 @@ public class StudentActivity extends AppCompatActivity {
         }
     }
 
-    /** Called when the user clicks the Test button */
-    public void studentChatInterface(View view) {
-        setContentView(R.layout.activity_student_chat);
-
-        /*
-        final ChatService thread = new ChatService(socket);
-        //change "socket" to the socket passed when the devices are connected
-        //socket needs to be passed from Niranjans connecting method directly
-        //or with a getter or setting the socket to a global variable.
-        final EditText entry = (EditText) findViewById(R.id.entry);
-        Button sendButton = (Button) findViewById(R.id.send);
-        Button closeButton = (Button) findViewById(R.id.close);
-
-        //Send Button
-        sendButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                thread.start();
-//                insert a toast to make sure that the get text works correctly.
-                thread.sendMessage(entry.getText().toString());
-            }
-        });
-
-        //Close button
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-            }
-        });
-        */
-    }
-
     /** Called when the user returns to the Bluetooth Selection Menu **/
     public void studentBluetoothInterface(View view) {
         setContentView(R.layout.activity_student);
@@ -125,6 +99,14 @@ public class StudentActivity extends AppCompatActivity {
             bluetoothSetupText.setText("Bluetooth is not available");
             //activity.finish();
         }else {
+            myListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    pairWithDevice((int) (myListView.getSelectedItemPosition()));
+                }
+            });
+
+
             // Make Device discoverable by other devices.
             Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
             discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
@@ -138,6 +120,44 @@ public class StudentActivity extends AppCompatActivity {
                     (this, android.R.layout.simple_list_item_1);
             myListView.setAdapter(BTArrayAdapter);
         }
+    }
+
+    /** Called when the user clicks the "Go to Quiz" button **/
+    public void studentChatInterface(View view) {
+        setContentView(R.layout.activity_student_chat);
+
+
+        final ChatService thread = new ChatService(mBTsocket);
+        //change "socket" to the socket passed when the devices are connected
+        //socket needs to be passed from Niranjans connecting method directly
+        //or with a getter or setting the socket to a global variable.
+        final EditText entry = (EditText) findViewById(R.id.entry);
+        Button sendButton = (Button) findViewById(R.id.send);
+
+        //Send Button
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                thread.start();
+//                insert a toast to make sure that the get text works correctly.
+                thread.sendMessage(entry.getText().toString());
+            }
+        });
+    }
+
+    /** Called when the user clicks a element of the ListView **/
+    public void pairWithDevice(int postion){
+        ConnectThread(pairedDevices.getItem(), true);
+    }
+
+
+    public void find(View view) {
+        if (mBluetoothAdapter.isDiscovering()) {
+            mBluetoothAdapter.cancelDiscovery();
+        }
+
+        BTArrayAdapter.clear();
+        mBluetoothAdapter.startDiscovery();
+        registerReceiver(bReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
     }
 
     public void list(View view){
@@ -168,14 +188,22 @@ public class StudentActivity extends AppCompatActivity {
         }
     };
 
-    public void find(View view) {
-        if (mBluetoothAdapter.isDiscovering()) {
-            mBluetoothAdapter.cancelDiscovery();
-        }
+    public void ConnectThread(BluetoothDevice device, boolean secure){// true for secure, device is the device you want to connect to
+        BluetoothDevice mmDevice = device;
+        BluetoothSocket tmp = null;
+        String mSocketType = secure ? "Secure": "Insecure";
 
-        BTArrayAdapter.clear();
-        mBluetoothAdapter.startDiscovery();
-        registerReceiver(bReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
+        try {
+            if (secure) {
+                tmp = device.createRfcommSocketToServiceRecord(MY_UUID_SECURE);
+            }else {
+                tmp = device.createRfcommSocketToServiceRecord(MY_UUID_INSECURE);
+            }
+        }
+        catch(IOException e){
+            // do something
+        }
+        mBTsocket = tmp;
     }
 
     private class ChatService extends Thread {
@@ -199,6 +227,7 @@ public class StudentActivity extends AppCompatActivity {
             mmInStream = tmpIn;
             mmOutStream = tmpOut;
         }
+
         //listens to any incoming data and displays them in the active UI
         public void run() {
             byte[] buffer = new byte[1024];
