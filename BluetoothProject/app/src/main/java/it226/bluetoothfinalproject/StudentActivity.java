@@ -1,5 +1,6 @@
 package it226.bluetoothfinalproject;
 
+import android.app.ActionBar;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -7,6 +8,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -24,8 +27,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
+
+import static it226.bluetoothfinalproject.R.color.black;
+import static java.sql.Types.NULL;
 
 public class StudentActivity extends AppCompatActivity {
 
@@ -126,27 +133,37 @@ public class StudentActivity extends AppCompatActivity {
     public void studentChatInterface(View view) {
         setContentView(R.layout.activity_student_chat);
 
+//        if (mBTsocket != null) {
+//            final ChatService thread = new ChatService(mBTsocket);
+            //change "socket" to the socket passed when the devices are connected
+            //socket needs to be passed from Niranjans connecting method directly
+            //or with a getter or setting the socket to a global variable.
+            final EditText entry = (EditText) findViewById(R.id.entry);
+            Button sendButton = (Button) findViewById(R.id.send);
 
-        final ChatService thread = new ChatService(mBTsocket);
-        //change "socket" to the socket passed when the devices are connected
-        //socket needs to be passed from Niranjans connecting method directly
-        //or with a getter or setting the socket to a global variable.
-        final EditText entry = (EditText) findViewById(R.id.entry);
-        Button sendButton = (Button) findViewById(R.id.send);
-
-        //Send Button
-        sendButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                thread.start();
-//                insert a toast to make sure that the get text works correctly.
-                thread.sendMessage(entry.getText().toString());
-            }
-        });
-    }
+            //Send Button
+            sendButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    EditText entry = (EditText) findViewById(R.id.entry);
+                    TextView ques = (TextView) findViewById(R.id.question);
+                    ques.setText(entry.getText());
+                    entry.setText("");
+//                    thread.start();
+////                insert a toast to make sure that the get text works correctly.
+//                    thread.sendMessage(entry.getText().toString());
+                }
+            });
+        }
+//    }
 
     /** Called when the user clicks a element of the ListView **/
     public void pairWithDevice(int postion){
-        ConnectThread(pairedDevices.getItem(), true);
+        Iterator iter = pairedDevices.iterator();
+        BluetoothDevice tmp;
+        for(int i = 0; i <= postion; i++){
+//            tmp = iter.next();
+        }
+//        ConnectThread(pairedDevices., true);
     }
 
 

@@ -8,24 +8,29 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/black"
     tools:context="it226.bluetoothfinalproject.MainActivity">
 
     <TextView
         android:text="This is the Main Activity"
+        android:textColor="@android:color/holo_green_light"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:id="@+id/textView"
         android:layout_gravity="center_horizontal"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center" />
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/textView">
 
         <TextView
+            android:textColor="@android:color/holo_green_light"
             android:text="Choose a role for this device"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,9 +41,11 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="487dp">
 
             <Button
+                android:textColor="@android:color/holo_green_light"
+                android:backgroundTint="@color/black"
                 android:text="Student Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -49,9 +56,12 @@
                 android:id="@+id/studentbutton"
 
                 android:layout_weight="1"
-                style="@style/Widget.AppCompat.Button" />
+                style="@style/Widget.AppCompat.Button"
+                android:elevation="7dp" />
 
             <Button
+                android:textColor="@android:color/holo_green_light"
+                android:backgroundTint="@color/black"
                 android:text="Teacher Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -62,7 +72,8 @@
                 android:id="@+id/teacher_button"
 
                 android:layout_weight="1"
-                style="@style/Widget.AppCompat.Button" />
+                style="@style/Widget.AppCompat.Button"
+                android:elevation="7dp" />
         </LinearLayout>
 
     </LinearLayout>

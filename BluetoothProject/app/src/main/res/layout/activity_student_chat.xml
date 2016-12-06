@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@color/black"
     tools:ignore="TextFields,HardcodedText" >
 
     <TextView
@@ -12,26 +13,20 @@
         android:text="Type here:"
         android:layout_above="@+id/entry"
         android:layout_alignParentLeft="true"
+        android:textColor="@android:color/holo_green_light"
         android:layout_alignParentStart="true" />
 
     <TextView
-        android:text="Received Question:"
+        android:text="Received questions and answer:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:id="@+id/label2"
+        android:textColor="@android:color/holo_green_light"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/question"
-        android:layout_below="@+id/label2"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
 
     <Button
         android:id="@+id/send"
@@ -40,7 +35,10 @@
         android:text="Send"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:textColor="@android:color/holo_green_light"
+        android:backgroundTint="@color/black"
+        android:elevation="7dp" />
 
     <EditText
         android:id="@+id/entry"
@@ -50,6 +48,8 @@
         android:layout_above="@+id/send"
         android:maxLength="30"
         android:layout_alignParentLeft="true"
+        android:backgroundTint="@color/black"
+        android:textColor="@android:color/holo_green_light"
         android:layout_alignParentStart="true" />
 
     <Button
@@ -60,5 +60,18 @@
         android:id="@+id/bluetooth_button"
         android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@+id/send"
-        android:layout_toStartOf="@+id/send" />
+        android:layout_toStartOf="@+id/send"
+        android:backgroundTint="@color/black"
+        android:textColor="@android:color/holo_green_light"
+        android:elevation="7dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/question"
+        android:textColor="@android:color/holo_green_light"
+        android:textSize="20sp"
+        android:layout_below="@+id/label2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

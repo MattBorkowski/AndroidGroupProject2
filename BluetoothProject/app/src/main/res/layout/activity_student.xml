@@ -8,9 +8,11 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/black"
     tools:context="it226.bluetoothfinalproject.StudentActivity">
 
     <TextView
+        android:textColor="@android:color/holo_green_light"
         android:text="This is the Student Activity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -19,6 +21,8 @@
         android:id="@+id/textView2" />
 
     <Button
+        android:textColor="@android:color/holo_green_light"
+        android:backgroundTint="@color/black"
         android:text="Go to Quiz"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -36,6 +40,7 @@
         android:layout_alignParentStart="true">
 
         <TextView
+            android:textColor="@android:color/holo_green_light"
             android:text="Bluetooth Setup Text Student"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -45,6 +50,8 @@
             android:id="@+id/bluetoothSetupStudentText" />
 
         <Button
+            android:textColor="@android:color/holo_green_light"
+            android:backgroundTint="@color/black"
             android:text="List Connected Devices"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -56,6 +63,8 @@
             android:id="@+id/student_list_button" />
 
         <Button
+            android:textColor="@android:color/holo_green_light"
+            android:backgroundTint="@color/black"
             android:text="Search for new devices"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -66,6 +75,7 @@
             android:id="@+id/student_find_button" />
 
         <ListView
+            android:textColor="@android:color/holo_green_light"
             android:layout_width="match_parent"
             android:layout_height="351dp"
             android:id="@+id/listView1" />
